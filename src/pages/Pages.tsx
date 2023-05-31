@@ -1,12 +1,12 @@
 import { Routes, Route } from 'react-router-dom'
-import { Example } from '../components'
+import { Register, Dom } from '../components'
 
 const Pages: React.FC = () => {
   return (
     <>
       <Routes>
-        <Route path="/time-tracker/register" element={<Example />} />
-        <Route path="/time-tracker" element={<Example />} />
+        <Route path="/time-tracker/" element={<Register />} />
+        <Route path="/time-tracker/dom" element={<Dom />} />
       </Routes>
     </>
   )
