@@ -1,157 +1,90 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { auth } from '../firebase'
-import {
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-} from 'firebase/auth'
-import '../styles/register.scss'
-import { alerts } from '../assets/const'
+import { useState } from 'react'
+import addAvatar from '../assets/images/addAvatar.png'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { auth, db, storage } from '../firebase'
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { doc, setDoc } from 'firebase/firestore'
+import { Link, useNavigate } from 'react-router-dom'
 
-const Register: React.FC = () => {
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
-  const [isRegistering, setIsRegistering] = useState<boolean>(false)
-  const [registerInfo, setRegisterInfo] = useState<RegisterInfo>({
-    email: '',
-    password: '',
-    confirmPassword: '',
-  })
-  const [error, setError] = useState<Alert>({
-    boolean: false,
-    text: '',
-  })
-
+function Register() {
+  const [err, setErr] = useState(false)
   const navigate = useNavigate()
 
-  const signIn = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigate('/time-tracker/dom')
-      })
-      .catch((err) => setError({ boolean: true, text: err.code }))
-  }
+  const handleSubmit = async (e: any) => {
+    e.preventDefault()
+    const displayName = e.target[0].value
+    const email = e.target[1].value
+    const password = e.target[2].value
+    const passwordAgain = e.target[3].value
+    const file = e.target[4].files[0]
 
-  const register = () => {
-    if (registerInfo.password !== registerInfo.confirmPassword) {
-      setError({ boolean: true, text: 'Пароли не совпадают' })
+    if (password !== passwordAgain) {
+      alert('Пароли не совпадают')
       return
     }
-    createUserWithEmailAndPassword(
-      auth,
-      registerInfo.email,
-      registerInfo.password
-    )
-      .then(() => {
-        navigate('/time-tracker/dom')
+
+    if (file === undefined) {
+      alert('Пожалуйста, выберите аватарку')
+      return
+    }
+
+    try {
+      //Create user
+      const res = await createUserWithEmailAndPassword(auth, email, password)
+
+      //Create a unique image name
+      const storageRef = ref(storage, displayName)
+
+      await uploadBytesResumable(storageRef, file).then(() => {
+        getDownloadURL(storageRef).then(async (downloadURL) => {
+          try {
+            //Update profile
+            await updateProfile(res.user, {
+              displayName,
+              photoURL: downloadURL,
+            })
+            //create user on firestore
+            await setDoc(doc(db, 'users', res.user.uid), {
+              uid: res.user.uid,
+              displayName,
+              email,
+              photoURL: downloadURL,
+            })
+            //create empty user chats on firestore
+            await setDoc(doc(db, 'userChats', res.user.uid), {})
+            navigate('/time-tracker/dom')
+          } catch (err) {
+            console.log(err)
+            setErr(true)
+          }
+        })
       })
-      .catch((err) => setError({ boolean: true, text: err.code }))
+    } catch (err) {
+      setErr(true)
+    }
   }
 
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        navigate('/time-tracker/dom')
-      }
-    })
-  }, [])
-
   return (
-    <div className="welcome">
-      <h1>Time Tracker</h1>
-      <div className="input-field">
-        {isRegistering ? (
-          <>
-            <input
-              type="email"
-              placeholder="Введите email"
-              value={registerInfo.email}
-              onChange={(e) =>
-                setRegisterInfo({ ...registerInfo, email: e.target.value })
-              }
-            />
-            <input
-              type="password"
-              placeholder="Введите пароль"
-              value={registerInfo.password}
-              onChange={(e) =>
-                setRegisterInfo({ ...registerInfo, password: e.target.value })
-              }
-            />
-            <input
-              type="password"
-              placeholder="Подтвердите пароль"
-              value={registerInfo.confirmPassword}
-              onChange={(e) =>
-                setRegisterInfo({
-                  ...registerInfo,
-                  confirmPassword: e.target.value,
-                })
-              }
-            />
-
-            {alerts.map((el) => {
-              if (el.error === error.text) {
-                return (
-                  <p className="error-alert" key={el.text}>
-                    {el.text}
-                  </p>
-                )
-              }
-            })}
-
-            <h1 className="register-button" onClick={register}>
-              Регистрация
-            </h1>
-
-            <button
-              className="back-account-button"
-              onClick={() => setIsRegistering(false)}
-            >
-              Вернуться
-            </button>
-          </>
-        ) : (
-          <>
-            <input
-              type="email"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
-              value={email}
-              placeholder="Email"
-            />
-            <input
-              type="password"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
-              value={password}
-              placeholder="Пароль"
-            />
-
-            <button className="sign-in" onClick={signIn}>
-              Войти
-            </button>
-            <button
-              className="create-account-button"
-              onClick={() => setIsRegistering(true)}
-            >
-              Зарегистрироваться
-            </button>
-
-            {alerts.map((el) => {
-              if (el.error === error.text) {
-                return (
-                  <p className="error-alert" key={el.text}>
-                    {el.text}
-                  </p>
-                )
-              }
-            })}
-          </>
-        )}
+    <div className="formContainer">
+      <div className="formWrapper">
+        <span className="logo">TALK</span>
+        <span className="title">Регистрация</span>
+        <form onSubmit={handleSubmit}>
+          <input type="text" placeholder="Никнейм"></input>
+          <input type="email" placeholder="Email"></input>
+          <input type="password" placeholder="Пароль"></input>
+          <input type="password" placeholder="Повторите пароль"></input>
+          <input style={{ display: 'none' }} type="file" id="file"></input>
+          <label htmlFor="file">
+            <img src={addAvatar} alt="img for register"></img>
+            <span>Выбрать аватарку</span>
+          </label>
+          <button>Зарегистрироваться</button>
+          {err && <span>Что-то пошло не так...</span>}
+          <p>
+            Уже есть аккаунт? <Link to="/time-tracker/">Войти</Link>
+          </p>
+        </form>
       </div>
     </div>
   )
