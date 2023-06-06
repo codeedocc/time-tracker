@@ -23,4 +23,8 @@ export const alerts: ErrorMessages[] = [
     error: 'auth/missing-password',
     text: 'Введите пароль',
   },
+  {
+    error: 'Пожалуйста, выберите аватарку',
+    text: 'Пожалуйста, выберите аватарку',
+  },
 ]

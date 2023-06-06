@@ -1,30 +1,42 @@
 import { useState } from 'react'
-import addAvatar from '../assets/images/addAvatar.png'
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { Link, useNavigate } from 'react-router-dom'
 import { auth, db, storage } from '../firebase'
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { doc, setDoc } from 'firebase/firestore'
-import { Link, useNavigate } from 'react-router-dom'
+import addAvatar from '../assets/images/addAvatar.png'
+import { alerts } from '../assets/const'
+import '../styles/register.scss'
 
 function Register() {
-  const [err, setErr] = useState(false)
+  const [errorPassword, setErrorPassword] = useState('')
+  const [errorPicture, setErrorPicture] = useState('')
+  const [error, setError] = useState<Alert>({
+    boolean: false,
+    text: '',
+  })
   const navigate = useNavigate()
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const displayName = e.target[0].value
-    const email = e.target[1].value
-    const password = e.target[2].value
-    const passwordAgain = e.target[3].value
-    const file = e.target[4].files[0]
+    const form = e.currentTarget as HTMLFormElement
+    const displayName = (form.elements[0] as HTMLInputElement).value
+    const email = (form.elements[1] as HTMLInputElement).value
+    const password = (form.elements[2] as HTMLInputElement).value
+    const passwordAgain = (form.elements[3] as HTMLInputElement).value
+    const file = (form.elements[4] as HTMLInputElement).files?.[0]
+
+    setErrorPassword('')
+    setErrorPicture('')
+    setError({ boolean: false, text: '' })
 
     if (password !== passwordAgain) {
-      alert('Пароли не совпадают')
+      setErrorPassword('Пароли не совпадают')
       return
     }
 
     if (file === undefined) {
-      alert('Пожалуйста, выберите аватарку')
+      setErrorPicture('Пожалуйста, выберите аватарку')
       return
     }
 
@@ -43,6 +55,7 @@ function Register() {
               displayName,
               photoURL: downloadURL,
             })
+
             //create user on firestore
             await setDoc(doc(db, 'users', res.user.uid), {
               uid: res.user.uid,
@@ -50,24 +63,24 @@ function Register() {
               email,
               photoURL: downloadURL,
             })
+
             //create empty user chats on firestore
-            await setDoc(doc(db, 'userChats', res.user.uid), {})
+            await setDoc(doc(db, 'usersInfo', res.user.uid), {})
             navigate('/time-tracker/dom')
-          } catch (err) {
-            console.log(err)
-            setErr(true)
+          } catch (err: any) {
+            setError({ boolean: true, text: err.code })
           }
         })
       })
-    } catch (err) {
-      setErr(true)
+    } catch (err: any) {
+      setError({ boolean: true, text: err.code })
     }
   }
 
   return (
     <div className="formContainer">
       <div className="formWrapper">
-        <span className="logo">TALK</span>
+        <span className="logo">Time Tracker</span>
         <span className="title">Регистрация</span>
         <form onSubmit={handleSubmit}>
           <input type="text" placeholder="Никнейм"></input>
@@ -80,10 +93,31 @@ function Register() {
             <span>Выбрать аватарку</span>
           </label>
           <button>Зарегистрироваться</button>
-          {err && <span>Что-то пошло не так...</span>}
           <p>
             Уже есть аккаунт? <Link to="/time-tracker/">Войти</Link>
           </p>
+
+          {alerts.map((el: any) => {
+            if (el.error === error.text) {
+              return (
+                <p className="error-alert" key={el.text}>
+                  {el.text}
+                </p>
+              )
+            } else if (errorPassword === el.error) {
+              return (
+                <p className="error-alert" key={el.text}>
+                  {el.text}
+                </p>
+              )
+            } else if (errorPicture === el.error) {
+              return (
+                <p className="error-alert" key={el.text}>
+                  {el.text}
+                </p>
+              )
+            }
+          })}
         </form>
       </div>
     </div>
