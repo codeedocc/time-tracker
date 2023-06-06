@@ -17,9 +17,13 @@ const Home: React.FC = () => {
         <div className="menu">
           <div className="user-info">
             <img src={almaz} alt="" />
-            <p>Сведения про</p>
-            <h1>Алмаз</h1>
-            <h1>Мусагитов</h1>
+            <div className="text">
+              <p>Сведения про</p>
+              <span>
+                <h1>Алмаз</h1>
+                <h1>Мусагитов</h1>
+              </span>
+            </div>
           </div>
 
           <div className="menu-list">
@@ -30,11 +34,13 @@ const Home: React.FC = () => {
             </div>
           </div>
         </div>
+
         <div className="statistics">
           <div className="card">
             <div className="card-image work">
               <img src={icon_work} alt="" />
             </div>
+
             <div className="card-info">
               <div className="info-title">
                 <p>Работа</p>
@@ -46,10 +52,12 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
+
           <div className="card">
             <div className="card-image play">
               <img src={icon_play} alt="" />
             </div>
+
             <div className="card-info">
               <div className="info-title">
                 <p>Игры</p>
@@ -61,10 +69,12 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
+
           <div className="card">
             <div className="card-image study">
               <img src={icon_study} alt="" />
             </div>
+
             <div className="card-info">
               <div className="info-title">
                 <p>Учёба</p>
@@ -76,10 +86,12 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
+
           <div className="card">
             <div className="card-image exercise">
               <img src={icon_exercise} alt="" />
             </div>
+
             <div className="card-info">
               <div className="info-title">
                 <p>Тренировки</p>
@@ -91,10 +103,12 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
+
           <div className="card">
             <div className="card-image social">
               <img src={icon_social} alt="" />
             </div>
+
             <div className="card-info">
               <div className="info-title">
                 <p>Социальные сети</p>
@@ -106,10 +120,12 @@ const Home: React.FC = () => {
               </div>
             </div>
           </div>
+
           <div className="card">
             <div className="card-image self-care">
               <img src={icon_self_care} alt="" />
             </div>
+
             <div className="card-info">
               <div className="info-title">
                 <p>Здоровье</p>
