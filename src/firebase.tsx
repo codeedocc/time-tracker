@@ -4,7 +4,7 @@ import { getStorage } from 'firebase/storage'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_SECRET_KEY,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: 'time-tracker-940e9.firebaseapp.com',
   projectId: 'time-tracker-940e9',
   storageBucket: 'time-tracker-940e9.appspot.com',
