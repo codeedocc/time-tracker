@@ -1,4 +1,9 @@
+import { useEffect } from 'react'
+import { signOut } from 'firebase/auth'
+import { auth } from '../firebase'
+import { useNavigate } from 'react-router-dom'
 import '../styles/home.scss'
+import { FiMoreHorizontal } from 'react-icons/fi'
 import { almaz } from '../assets/images'
 import {
   icon_work,
@@ -8,9 +13,22 @@ import {
   icon_social,
   icon_self_care,
 } from '../assets/images'
-import { FiMoreHorizontal } from 'react-icons/fi'
 
 const Home: React.FC = () => {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        navigate('/time-tracker/')
+      }
+    })
+  }, [])
+
+  const exit = () => {
+    signOut(auth).then(() => navigate('/time-tracker/'))
+  }
+
   return (
     <div className="wrapper">
       <div className="panel">
@@ -22,6 +40,7 @@ const Home: React.FC = () => {
               <span>
                 <h1>Алмаз</h1>
                 <h1>Мусагитов</h1>
+                <p onClick={exit}>Выйти</p>
               </span>
             </div>
           </div>

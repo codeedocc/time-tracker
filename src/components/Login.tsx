@@ -21,7 +21,7 @@ function Login() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      navigate('/time-tracker/dom')
+      navigate('/time-tracker/homepage')
     } catch (err) {
       setErr(true)
     }
@@ -35,6 +35,16 @@ function Login() {
     return () => {
       clearInterval(timer)
     }
+  }, [])
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        navigate('/time-tracker/')
+      } else if (user) {
+        navigate('/time-tracker/homepage')
+      }
+    })
   }, [])
 
   return (
