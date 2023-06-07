@@ -1,4 +1,5 @@
-import Example from './Example'
+import Register from './Register'
 import Home from './Home'
 
-export { Example, Home }
+export { Register, Home }
+
