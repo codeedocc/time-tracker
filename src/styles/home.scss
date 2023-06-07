@@ -1,0 +1,294 @@
+* {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+@mixin mobile {
+  @media screen and (max-width: 480px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media screen and (max-width: 768px) {
+    @content;
+  }
+}
+
+@mixin laptop {
+  @media screen and (max-width: 1400px) {
+    @content;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 0rem;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+.wrapper {
+  position: relative;
+  background: #0d1323;
+  width: 100vw;
+  height: 100vh;
+
+  .panel {
+    display: flex;
+    color: #fff;
+    position: fixed;
+    width: 80%;
+    height: 60%;
+    border-radius: 10px;
+
+    margin-top: 10%;
+    margin-bottom: 10%;
+    margin-left: 10%;
+    margin-right: 10%;
+
+    @include tablet {
+      height: 92.5%;
+      flex-direction: column;
+      overflow-y: scroll;
+    }
+
+    .menu {
+      width: 25%;
+      position: relative;
+      border-radius: 15px;
+
+      @include tablet {
+        width: 100%;
+        height: 200px;
+      }
+
+      .user-info {
+        background: #63f;
+        padding-left: 45px;
+        padding-top: 45px;
+        height: calc(70% - 35px);
+        border-radius: 15px 15px 0px 0px;
+        z-index: 1;
+
+        @include tablet {
+          padding-left: 30px;
+          height: 100%;
+          display: flex;
+          gap: 10px;
+        }
+
+        img {
+          height: 80px;
+          width: 80px;
+          border-radius: 99%;
+          box-shadow: 0 0 0 2px #fff;
+          object-fit: contain;
+
+          @include tablet {
+            margin-top: 30px;
+            margin-bottom: 30px;
+            height: 60px;
+            width: 60px;
+          }
+        }
+
+        .text {
+          p:first-of-type {
+            padding-top: 30px;
+            padding-bottom: 10px;
+            color: #ccf;
+
+            @include tablet {
+              padding-left: 20px;
+            }
+          }
+
+          span {
+            h1 {
+              padding-bottom: 10px;
+            }
+
+            @include tablet {
+              display: flex;
+              gap: 10px;
+              padding-left: 20px;
+              padding-top: 0px;
+              font-size: 10px;
+            }
+          }
+        }
+      }
+
+      .menu-list {
+        position: absolute;
+        background: #1d204b;
+        border-radius: 0 0 15px 15px;
+        z-index: -1;
+        width: 100%;
+        height: 28%;
+
+        p {
+          padding-top: 20px;
+          color: #669;
+          font-weight: bold;
+          font-size: 18px;
+          padding-left: 45px;
+
+          @include tablet {
+            padding-left: 0px;
+          }
+        }
+
+        p:last-of-type {
+          padding-bottom: 20px;
+
+          @include tablet {
+            padding-bottom: 0px;
+          }
+        }
+
+        @include tablet {
+          padding-top: 45px;
+          width: 100%;
+          height: 6%;
+        }
+
+        .daily-weekly-monthly {
+          position: absolute;
+          bottom: 0;
+
+          @include tablet {
+            padding-bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+
+            p {
+              font-size: 15px;
+            }
+          }
+        }
+      }
+    }
+
+    .statistics {
+      width: 80%;
+      display: flex;
+      flex-wrap: wrap;
+
+      @include tablet {
+        padding-top: 145px;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        flex-wrap: nowrap;
+      }
+
+      .card {
+        height: 46%;
+        width: 30%;
+        margin-left: 35px;
+        margin-bottom: 45px;
+        position: relative;
+        z-index: -2;
+        border-radius: 15px;
+
+        @include tablet {
+          padding-top: 300px;
+          width: 100%;
+          margin-left: 0px;
+        }
+
+        .card-image {
+          background: pink;
+          height: 30%;
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 100%;
+          z-index: -1;
+          border-radius: 15px 15px 0px 0px;
+
+          img {
+            position: absolute;
+            right: 25px;
+
+            @include tablet {
+              height: 100px;
+            }
+          }
+        }
+
+        .card-image.work {
+          background: #f96;
+        }
+
+        .card-image.play {
+          background: #6cf;
+        }
+
+        .card-image.study {
+          background: #f66;
+        }
+
+        .card-image.exercise {
+          background: #3c9;
+        }
+
+        .card-image.social {
+          background: #63c;
+        }
+
+        .card-image.self-care {
+          background: #fc6;
+        }
+
+        .card-info {
+          background: #1d204b;
+          position: absolute;
+          height: calc(100% - 50px);
+          bottom: 0;
+          width: 100%;
+          z-index: 1;
+          border-radius: 15px;
+
+          @include tablet {
+            height: calc(100% - 70px);
+          }
+
+          .info-title {
+            display: flex;
+            justify-content: space-between;
+            padding: 25px 25px 0 25px;
+            font-weight: bold;
+
+            .dots {
+              height: 25px;
+              width: 25px;
+            }
+          }
+
+          .hours-result {
+            padding-top: 35px;
+            padding-left: 25px;
+
+            h1 {
+              font-size: 50px;
+            }
+
+            p {
+              padding-top: 5px;
+              color: #ccf;
+            }
+          }
+        }
+      }
+    }
+  }
+}
