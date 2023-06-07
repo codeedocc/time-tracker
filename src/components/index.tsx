@@ -1,4 +1,5 @@
 import Register from './Register'
-import Dom from './Dom'
+import Home from './Home'
 
-export { Register, Dom }
+export { Register, Home }
+
