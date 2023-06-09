@@ -93,10 +93,12 @@ function Register() {
             <span>Выбрать аватарку</span>
           </label>
           <button>Зарегистрироваться</button>
-          <p>
-            Уже есть аккаунт? <Link to="/time-tracker/">Войти</Link>
-          </p>
-
+          <div className="login">
+            <p>Уже есть аккаунт?</p>
+            <Link to="/time-tracker/">
+              <p className="enter">Войти</p>
+            </Link>
+          </div>
           {alerts.map((el: any) => {
             if (el.error === error.text) {
               return (
