@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom'
-import { Register, Home } from '../components'
-import Login from '../components/Login'
+import { Register, Home, Login } from '../components'
 
 const Pages: React.FC = () => {
   return (

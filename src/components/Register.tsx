@@ -66,7 +66,7 @@ function Register() {
 
             //create empty user chats on firestore
             await setDoc(doc(db, 'usersInfo', res.user.uid), {})
-            navigate('/time-tracker/dom')
+            navigate('/time-tracker/homepage')
           } catch (err: any) {
             setError({ boolean: true, text: err.code })
           }
@@ -93,10 +93,12 @@ function Register() {
             <span>Выбрать аватарку</span>
           </label>
           <button>Зарегистрироваться</button>
-          <p>
-            Уже есть аккаунт? <Link to="/time-tracker/">Войти</Link>
-          </p>
-
+          <div className="login">
+            <p>Уже есть аккаунт?</p>
+            <Link to="/time-tracker/">
+              <p className="enter">Войти</p>
+            </Link>
+          </div>
           {alerts.map((el: any) => {
             if (el.error === error.text) {
               return (
