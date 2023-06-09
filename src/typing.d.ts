@@ -13,3 +13,16 @@ interface ErrorMessages {
   error: string
   text: string
 }
+
+interface IUser {
+  currentUser: {
+    uid?: number
+    displayName?: string
+    email?: string
+    photoURL?: string
+  }
+}
+
+interface IAuth {
+  children: ReactNode
+}

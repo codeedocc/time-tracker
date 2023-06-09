@@ -1,5 +1,9 @@
-import '../styles/home.scss'
-import { almaz } from '../assets/images'
+import { useEffect, useContext } from 'react'
+import { FiMoreHorizontal } from 'react-icons/fi'
+import { useNavigate } from 'react-router-dom'
+import { AuthContext } from '../context/AuthContext'
+import { signOut } from 'firebase/auth'
+import { auth } from '../firebase'
 import {
   icon_work,
   icon_play,
@@ -8,20 +12,35 @@ import {
   icon_social,
   icon_self_care,
 } from '../assets/images'
-import { FiMoreHorizontal } from 'react-icons/fi'
+import '../styles/home.scss'
 
 const Home: React.FC = () => {
+  const navigate = useNavigate()
+  const { currentUser } = useContext(AuthContext)
+
+  const exit = () => {
+    signOut(auth).then(() => navigate('/time-tracker/'))
+  }
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user: any) => {
+      if (!user) {
+        navigate('/time-tracker/')
+      }
+    })
+  }, [])
+
   return (
     <div className="wrapper">
       <div className="panel">
         <div className="menu">
           <div className="user-info">
-            <img src={almaz} alt="" />
+            <img src={currentUser.photoURL} alt="" />
             <div className="text">
               <p>Сведения про</p>
               <span>
-                <h1>Алмаз</h1>
-                <h1>Мусагитов</h1>
+                <h1>{currentUser.displayName}</h1>
+                <h1 onClick={exit}>Выйти</h1>
               </span>
             </div>
           </div>

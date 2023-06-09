@@ -4,7 +4,7 @@ import { auth, db, storage } from '../firebase'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import { doc, setDoc } from 'firebase/firestore'
-import addAvatar from '../assets/images/addAvatar.png'
+import { addAvatar } from '../assets/images'
 import { alerts } from '../assets/const'
 import '../styles/register.scss'
 
@@ -66,7 +66,7 @@ function Register() {
 
             //create empty user chats on firestore
             await setDoc(doc(db, 'usersInfo', res.user.uid), {})
-            navigate('/time-tracker/dom')
+            navigate('/time-tracker/homepage')
           } catch (err: any) {
             setError({ boolean: true, text: err.code })
           }

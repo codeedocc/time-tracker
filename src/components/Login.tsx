@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../firebase'
-import time from '../assets/images/time.gif'
+import { time } from '../assets/images'
 import '../styles/login.scss'
 
 function Login() {
@@ -21,7 +21,7 @@ function Login() {
 
     try {
       await signInWithEmailAndPassword(auth, email, password)
-      navigate('/time-tracker/dom')
+      navigate('/time-tracker/homepage')
     } catch (err) {
       setErr(true)
     }
@@ -35,6 +35,16 @@ function Login() {
     return () => {
       clearInterval(timer)
     }
+  }, [])
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        navigate('/time-tracker/')
+      } else if (user) {
+        navigate('/time-tracker/homepage')
+      }
+    })
   }, [])
 
   return (
